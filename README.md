@@ -3,11 +3,11 @@
 
 ## Table of Contents
 - [Overview](#overview)
-- [Essential Features](#Essential Features)
+- [Essential Features](#essential-features)
 - [Links](#links)
 - [Movies](movies)
 - [Process](#process)
-  - [Programming Languages](#programming languages)
+  - [Programming Languages](#programming-languages)
 - [User](#users)
 - [Authentication](#authentication)
 
