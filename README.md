@@ -3,7 +3,7 @@
 
 ## Table of Contents
 - [Overview](#overview)
-- [Essential Features](#essential features)
+- [Essential Features](#Essential Features)
 - [Links](#links)
 - [Movies](movies)
 - [Process](#process)
