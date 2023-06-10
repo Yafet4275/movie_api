@@ -18,7 +18,7 @@ movies, directors, and genres. Users will be able to sign up, update their
 personal information, and create a list of their favorite movies.
 
 
-## Essential Features
+### Essential Features
   - Return a list of ALL movies to the user
   - Return data (description, genre, director, image URL, whether it’s featured or not) about a
   single movie by title to the user
@@ -57,6 +57,7 @@ personal information, and create a list of their favorite movies.
   POST /users
   PUT /users/:userId
   DELETE /users/:userId
+
 
 ## Authentication
   POST /login
