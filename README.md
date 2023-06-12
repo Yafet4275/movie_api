@@ -8,8 +8,6 @@
 - [Movies](movies)
 - [Process](#process)
   - [Programming Languages](#programming-languages)
-- [User](#users)
-- [Authentication](#authentication)
 
 
 ## Overview
@@ -51,16 +49,6 @@ personal information, and create a list of their favorite movies.
  - CSS
  - JavaScript ES6
  - NodeJS
-
-
-## Users
-  POST /users
-  PUT /users/:userId
-  DELETE /users/:userId
-
-
-## Authentication
-  POST /login
 
 
 
