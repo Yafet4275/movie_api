@@ -7,6 +7,7 @@ const bodyParser = require('body-parser'),
 
 // Middleware
 app.use(bodyParser.json());
+app.use(express.static('public'));
 
 let users = [
   {
@@ -135,10 +136,6 @@ let movies = [
 ];
 
 // Routes
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'index.html'));
-});
-
 app.get('/movies', (req, res) => {
   res.status(200).json(movies);
 });
@@ -162,7 +159,7 @@ app.get('/movies/:title', (req, res) => {
   if (movie) {
     return res.status(200).json(movie);
   }else{
-    res.status(400).send('no such movie');
+    res.status(404).send('no such movie');
   }
 });
 
@@ -173,7 +170,7 @@ app.get('/movies/genre/:genreName', (req, res) => {
   if (genre) {
     return res.status(200).json(genre);
   }else{
-    res.status(400).send('no such movie');
+    res.status(404).send('no such movie');
   }
 });
 
@@ -184,13 +181,8 @@ app.get('/movies/directors/:directorName', (req, res) => {
   if (director) {
     return res.status(200).json(director);
   }else{
-    res.status(400).send('no such movie');
+    res.status(404).send('no such movie');
   }
-});
-
-// Serve documentation.html from the public folder
-app.get('/documentation.html', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
 });
 
 // Post
@@ -202,7 +194,7 @@ app.post('/users', (req, res) => {
     users.push(newUser);
     res.status(201).json(newUser);
   }else{
-    res.status(400).send('users need names');
+    res.status(404).send('users need names');
   }
 })
 
@@ -214,7 +206,7 @@ app.post('/users/:id/:movieTitle', (req, res) => {
     user.favoriteMovies.push(movieTitle);
     res.status(200).json(user);
   }else{
-    res.status(400).send('no such user');
+    res.status(404).send('no such user');
   }
 })
 
@@ -227,7 +219,7 @@ app.put('/users/:id', (req, res) => {
     user.name = updateUser.name;
     res.status(200).json(user);
   }else{
-    res.status(400).send('no such user');
+    res.status(404).send('no such user');
   }
 })
 
@@ -239,7 +231,7 @@ app.delete('/users/:id', (req, res) => {
     users = users.filter( user => user.id != id );
     res.status(200).send(`user ${id} has been deleted`);
   }else{
-    res.status(400).send('no such user');
+    res.status(404).send('no such user');
   }
 })
 
@@ -250,7 +242,7 @@ app.delete('/users/:id/:movieTitle', (req, res) => {
     user.favoriteMovies = user.favoriteMovies.filter( title => title !== movieTitle);
     res.status(200).send(`Movie title has been deleted`);
   }else{
-    res.status(400).send('no such user');
+    res.status(404).send('no such user');
   }
 })
 
