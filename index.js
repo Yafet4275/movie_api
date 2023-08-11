@@ -140,6 +140,11 @@ app.get('/movies', (req, res) => {
   res.status(200).json(movies);
 });
 
+// Add this line to serve a specific file
+app.get('/documentation', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
+});
+
 app.get('/users', (req, res) => {
   res.status(200).json(users);
 })
