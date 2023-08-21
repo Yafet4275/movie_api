@@ -19,10 +19,8 @@ app.use(express.static('public'));
 
 // Routes
 app.get('/movies', (req, res) => {
-  console.log("movies");
   Movie.find()
     .then((movie) => {
-      console.log("after then");
       res.status(200).json(movie);
     })
     .catch((err) => {
@@ -115,32 +113,25 @@ app.post("/users", (req, res) => {
 });
 
 app.post('/users/:Username/favorites/:MovieTitle', (req, res) => {
-  console.log("Inside");
   const { Username, MovieTitle } = req.params;
-  console.log('Username: ' + Username);
-  console.log('MovieTitle: ' + MovieTitle);
   // Find the user by their username
   User.findOne({ Name: Username })
     .then((user) => {
       if (!user) {
-        console.log("User not found");
         return res.status(404).send('User not found')
       }
       // Find the movie by its title
       Movie.findOne({Title: MovieTitle})
         .then((movie) => {
           if(!movie) {
-            console.log("Movie not found");
             return res.status(404).send('Movie not found');
           }
           // Check if the movie is already in the user's favorites
           if(user.FavoriteMovies.includes(movie._id)) {
-            console.log("Movie already in favorites");
             return res.status(400).send('Movie already in favorites');
           } else {
             // Add the movie's ID to the user's favorites
             user.FavoriteMovies.push(movie._id);
-            console.log("pushing data");
             // Save the updated user data
             const updatedUser = user.save();
             res.status(200).json(updatedUser);
