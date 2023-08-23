@@ -64,8 +64,8 @@ app.get('/movies/:Title', (req, res) => {
 
 app.get('/genre/:name', (req, res) => {
   Movie.findOne({'Genre.Name': req.params.name})
-    .then((genre) => {
-      res.json(genre);
+    .then((movie) => {
+      res.json(movie.Genre);
     })
     .catch((err) => {
       console.error(err);
@@ -75,8 +75,8 @@ app.get('/genre/:name', (req, res) => {
 
 app.get('/director/:name', (req, res) => {
   Movie.findOne({'Director.Name': req.params.name})
-    .then((director) => {
-      res.json(director);
+    .then((movie) => {
+      res.json(movie.Director);
     })
     .catch((err) => {
       console.error(err);
@@ -118,12 +118,12 @@ app.post('/users/:Username/favorites/:MovieTitle', (req, res) => {
   User.findOne({ Name: Username })
     .then((user) => {
       if (!user) {
-        return res.status(404).send('User not found')
+        return res.status(404).send('User not found');
       }
       // Find the movie by its title
-      Movie.findOne({Title: MovieTitle})
+      Movie.findOne({ Title: MovieTitle })
         .then((movie) => {
-          if(!movie) {
+          if (!movie) {
             return res.status(404).send('Movie not found');
           }
           // Check if the movie is already in the user's favorites
@@ -132,9 +132,13 @@ app.post('/users/:Username/favorites/:MovieTitle', (req, res) => {
           } else {
             // Add the movie's ID to the user's favorites
             user.FavoriteMovies.push(movie._id);
-            // Save the updated user data
-            const updatedUser = user.save();
-            res.status(200).json(updatedUser);
+            // Save the updated user data and send it in the response
+            user.save().then((updatedUser) => {
+              res.status(200).json(updatedUser);
+            }).catch((err) => {
+              console.error(err);
+              res.status(500).send('Error: ' + err);
+            });
           }
         })
         .catch((err) => {
@@ -170,8 +174,6 @@ app.put("/users/:name", (req, res) => {
       res.status(500).send('Error: ' + err);
     })
   });
-
-
 
 app.delete('/users/:Username/favorites/:MovieTitle', (req, res) => {
   const { Username, MovieTitle } = req.params;
