@@ -1,19 +1,17 @@
-const bodyParser = require('body-parser'),
-  express = require('express'), 
-  path = require('path'), 
-  app = express(),
-  uuid = require('uuid'), 
-  PORT = process.env.PORT || 8080;
+// index.js
+const bodyParser = require('body-parser');
+const express = require('express'); 
+const path = require('path');
+const jwt = require('jsonwebtoken'); 
+const app = express();
+const PORT = process.env.PORT || 8080;
+
 app.use(bodyParser.urlencoded({extended: true}));
-// let auth = require('./auth')(app);
-const auth = require('./auth')(app);
+const authRouters = require('./auth');
 const passport =  require('passport');
 require('./passport');
-
 const mongoose = require('mongoose');
-const Models = require('./models.js');
-const Movie = Models.Movie;
-const User = Models.User;
+const { User, Movie } = require('./models');
 
 mongoose.connect('mongodb://127.0.0.1:27017/movie', { 
   useNewUrlParser: true, 
@@ -23,6 +21,8 @@ app.use(bodyParser.json());
 app.use(express.static('public'));
 
 // Routes
+app.use('/', authRouters);
+
 app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
   Movie.find()
     .then((movie) => {
@@ -90,12 +90,12 @@ app.get('/director/:name', passport.authenticate('jwt', { session: false }), asy
   });
 
 app.post("/register", async (req, res) => {
+  const username = req.body.Name;
   try {
     const existingUser = await User.findOne({ Name: req.body.Name });
     if (existingUser) {
       return res.status(400).send(req.body.Name + " already exists");
     }
-
     const newUser = new User({
       Name: req.body.Name,
       Email: req.body.Email,
@@ -103,42 +103,26 @@ app.post("/register", async (req, res) => {
       Password: req.body.Password,
       Country: req.body.Country,
     });
-
     await newUser.save();
-    res.status(201).json(newUser);
+    // Return the user and the token as a JSON response
+    res.status(201).json({user: newUser});
   } catch (error) {
-    console.error(error);
     res.status(500).send("Error: " + error.message);
   }
 });
   
-
-  // app.post("/users", async (req, res) => {
-  //   const { Username, Password } = req.body;
-  
-  //   console.log("Received data:", req.body);
-  
-  //   try {
-  //     const existingUser = await User.findOne({ Username });
-  //     if (existingUser) {
-  //       return res.status(400).send(`${Username} already exists.`);
-  //     }
-  
-  //     const newUser = new User({
-  //       Username,
-  //       Password,
-  //     });
-  
-  //     await newUser.save();
-  //     console.log("User saved:", newUser);
-  //     res.status(201).json(newUser);
-  //   } catch (error) {
-  //     console.error(error);
-  //     res.status(500).send("Error: " + error.message);
-  //   }
-  // });
-  
-  
+// Authenticate user using local strategy (username and password)
+app.post('/login', (req, res, next) => {
+  passport.authenticate('local', { session: false }, (err, user, info) => {
+    if (err || !user) {
+      return res.status(400).json({ message: info.message });
+    }
+    // If authentication succeeds, generate JWT token
+    const token = jwt.sign({ id: user._id }, 'A7$9fG2z#P5!vR8qYpTmWbZnC');
+    // Return the user and the token as a JSON response
+    return res.json({ user, token });
+  })(req, res);
+});
   
 app.post('/users/:Username/favorites/:MovieTitle', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { Username, MovieTitle } = req.params;
@@ -250,7 +234,7 @@ app.delete('/users/:Username/favorites/:MovieTitle', passport.authenticate('jwt'
     });
 });
 
-//Allow user to deregister
+//Allow existing user to deregister
 app.delete('/users/:Username', passport.authenticate('jwt', { session: false }), async (req, res) => {
   User.findOneAndRemove({ Name: req.params.Username })
     .then((user) => {
@@ -272,6 +256,6 @@ app.get('/documentation', async (req, res) => {
 });
 
 // Start the server
-app.listen(PORT, () => {
+app.listen(PORT, '0.0.0.0', () => {
   console.log(`Server is running on port ${PORT}`);
 });
