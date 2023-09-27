@@ -7,7 +7,7 @@ const app = express();
 const PORT = process.env.PORT || 8080;
 
 app.use(bodyParser.urlencoded({extended: true}));
-const authRouters = require('./auth');
+const authRouters = require('./auth')
 const passport =  require('passport');
 require('./passport');
 const mongoose = require('mongoose');
