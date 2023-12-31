@@ -1,13 +1,16 @@
 // auth.js
 
 const express = require('express');
+const cors = require('cors');
+const app = require('./index');
 const passport = require('passport');
 const jwt = require('jsonwebtoken');
 const router = express.Router();
 const User = require('./models').User
 // const cors = require('cors');
-let allowdOrigins = ['http://localhost:8080', 'http://testsite.com'];
-app.use(cors());
+let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
+// router.use(cors());
+// app.use(cors());
 // require('./passport');
 
 router.post('/login', (req, res, next) => {
@@ -27,7 +30,7 @@ router.post('/login', (req, res, next) => {
   })(req, res, next);
 });
 
-app.use(cors({
+router.use(cors({
   origin: (origin, callback) => {
     if(!origin) return callback(null, true);
     if(allowedOrigins.indexOf(origin) === -1){ //If a specific origin isn't found on the list of allowed origins
