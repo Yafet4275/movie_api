@@ -20,10 +20,17 @@ const passport =  require('passport');
 const mongoose = require('mongoose');
 const { User, Movie } = require('./models');
 
-mongoose.connect('process.env.CONNECTION_URI', { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-});
+// mongoose.connect('mongodb://127.0.0.1:27017/movie', { 
+//   useNewUrlParser: true, 
+//   useUnifiedTopology: true 
+// });
+
+// mongoose.connect('mongodb+srv://yafet:Cucalavalar0pa94711@t13nd3@cluster0.kpcre4j.mongodb.net/movie?retryWrites=true&w=majority', { 
+//   useNewUrlParser: true, 
+//   useUnifiedTopology: true 
+// });
+
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 
 mongoose.connection.on('error', err => {
   console.error('MongoDB connection error:', err);
