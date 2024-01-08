@@ -16,16 +16,11 @@ const { check, validationResult } = require('express-validator');
 app.use(bodyParser.urlencoded({extended: true}));
 const authRouter = require('./auth');
 const passport =  require('passport');
-// require('./passport');
+require('./passport');
 const mongoose = require('mongoose');
 const { User, Movie } = require('./models');
 
 // mongoose.connect('mongodb://127.0.0.1:27017/movie', { 
-//   useNewUrlParser: true, 
-//   useUnifiedTopology: true 
-// });
-
-// mongoose.connect('mongodb+srv://yafet:Cucalavalar0pa94711@t13nd3@cluster0.kpcre4j.mongodb.net/movie?retryWrites=true&w=majority', { 
 //   useNewUrlParser: true, 
 //   useUnifiedTopology: true 
 // });
@@ -81,7 +76,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), async (req,
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error: " + err);
+      res.status(500).send("Error, unauthenticated users" + err);
     });
 });
 
@@ -140,30 +135,34 @@ app.get('/director/:name', passport.authenticate('jwt', { session: false }), asy
     });
   });
 
-app.post('/users',
+// Add this line to serve a specific file
+app.get('/documentation', async (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
+});
+
+app.post('/register',
 [
-  check('Username', 'Username is required').isLength({min: 5}),
-  check('Username', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
+  check('Name', 'Username is required').isLength({min: 5}),
+  check('Name', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
   check('Password', 'Password is required').not().isEmpty(),
   check('Email', 'Email does not appear to be valid').isEmail()
 ], async (req, res) => {
 
 // check the validation object for errors
   let errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     return res.status(422).json({ errors: errors.array() });
   }
-
-  let hashedPassword = userSchema.hashPassword(req.body.Password);
-  await User.findOne({ Username: req.body.Username }) // Search to see if a user with the requested username already exists
+  // let hashedPassword = userSchema.hashPassword(req.body.Password);
+  let hashedPassword = User.hashPassword(req.body.Password);
+  await User.findOne({ Name: req.body.Name }) // Search to see if a user with the requested username already exists
     .then((user) => {
       if (user) {
         //If the user is found, send a response that it already exists
-        return res.status(400).send(req.body.Username + ' already exists');
+        return res.status(400).send(req.body.Name + ' already exists');
       } else {
         User.create({
-            Username: req.body.Username,
+            Name: req.body.Name,
             Password: hashedPassword,
             Email: req.body.Email,
             Birthday: req.body.Birthday
@@ -185,7 +184,7 @@ app.post('/users',
 app.post('/login', (req, res, next) => {
   passport.authenticate('local', { session: false }, (err, user, info) => {
     if (err || !user) {
-      return res.status(400).json({ message: info.message });
+      return res.status(400).json({ message: info.message, user: user });
     }
     // If authentication succeeds, generate JWT token
     const token = jwt.sign({ id: user._id }, 'A7$9fG2z#P5!vR8qYpTmWbZnC');
@@ -239,8 +238,6 @@ app.put("/users/:name", passport.authenticate('jwt', { session: false }), async 
   if(req.user.Name !== req.params.name) {
     return res.status(400).send('Permission denied');
   }
-  // condition ends
-  
   await User.findOneAndUpdate(
     {Name: req.params.name},
     {
@@ -249,8 +246,8 @@ app.put("/users/:name", passport.authenticate('jwt', { session: false }), async 
         Email: req.body.Email,
         Birthday: req.body.Birthday,
         Password: req.body.Password,
-        Country: req.body.Country,
-      },
+        Country: req.body.Country
+      }
     },
     {new: true}) // This line makes sure that the updated document is returned
       .then((updatedUser) => {
@@ -319,16 +316,6 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
       res.status(500).send('Error: ' + err);
     });
 });
-
-// Add this line to serve a specific file
-app.get('/documentation', async (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'documentation.html'));
-});
-
-// Start the server
-// app.listen(PORT, '0.0.0.0', () => {
-//   console.log(`Server is running on port ${PORT}`);
-// });
 
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {

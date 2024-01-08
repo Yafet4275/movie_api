@@ -25,15 +25,14 @@ const User = require('./models').User
 //   }
 // ));
 
-passport.use(
-  new LocalStrategy(
+passport.use(new LocalStrategy(
     {
       usernameField: 'Name',
       passwordField: 'Password',
     },
     async (username, password, callback) => {
       console.log(`${username} ${password}`);
-      await Users.findOne({ Username: username })
+      await User.findOne({ Name: username })
       .then((user) => {
         if (!user) {
           console.log('incorrect username');
