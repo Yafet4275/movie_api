@@ -1,13 +1,9 @@
-// index.js
-//I installed cors through npm install cors 
-
 const express = require('express');
 const cors = require('cors');
 const bodyParser = require('body-parser');
 const bcrypt = require('bcrypt'); 
 const path = require('path');
 const jwt = require('jsonwebtoken');
-// const app = require('./index');
 const app = express();
 
 const PORT = process.env.PORT || 8080;
@@ -34,7 +30,7 @@ mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-// app.use(cors());
+
 app.use(express.json());
 app.use(express.static('public'));
 
@@ -50,6 +46,7 @@ app.use(cors({
     return callback(null, true);
   }
 }));
+// app.use(cors());
 
 app.use('/', authRouter);
 
@@ -142,7 +139,7 @@ app.get('/documentation', async (req, res) => {
 
 app.post('/register',
 [
-  check('Name', 'Username is required').isLength({min: 5}),
+  check('Name', 'Username need at least 5 letters').isLength({min: 5}),
   check('Name', 'Username contains non alphanumeric characters - not allowed.').isAlphanumeric(),
   check('Password', 'Password is required').not().isEmpty(),
   check('Email', 'Email does not appear to be valid').isEmail()
@@ -162,16 +159,16 @@ app.post('/register',
         return res.status(400).send(req.body.Name + ' already exists');
       } else {
         User.create({
-            Name: req.body.Name,
-            Password: hashedPassword,
-            Email: req.body.Email,
-            Birthday: req.body.Birthday
-          })
-          .then((user) => { res.status(201).json(user) })
-          .catch((error) => {
-            console.error(error);
-            res.status(500).send('Error: ' + error);
-          });
+          Name: req.body.Name,
+          Password: hashedPassword,
+          Email: req.body.Email,
+          Birthday: req.body.Birthday
+        })
+        .then((user) => { res.status(201).json(user) })
+        .catch((error) => {
+          console.error(error);
+          res.status(500).send('Error: ' + error);
+        });
       }
     })
     .catch((error) => {

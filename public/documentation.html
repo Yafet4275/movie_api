@@ -78,32 +78,17 @@
           <tr>
             <td scope="row" class="text-center">7</td>
             <td>GET</td>
-            <td>/directors/directorName</td>
+            <td>/director/directorName</td>
             <td></td>
             <td>Return the Director information match with the movie</td>
           </tr>
-          <tr>
-            <td scope="row" class="text-center">8</td>
-            <td>POST</td>
-            <td>/users</td>
-            <td>
-              {
-              "name": "New user",
-              "favoriteMovies":[]
-              }
-            </td>
-            <td>{
-              "name": "New user",
-              "favoriteMovies": [],
-              "id": "d477201c-bac9-4db9-b345-dae9bfa8b8ee"
-          }</td>
           </tr>
           <tr>
             <td scope="row" class="text-center">9</td>
             <td>POST</td>
             <td>/users/:Username/favorites/:MovieTitle'</td>
             <td></td>
-            <td></td>
+            <td>Return user information with favorite movie added</td>
           </tr>
           <tr>
             <td scope="row" class="text-center">10</td>
@@ -126,7 +111,7 @@
             <td>DELETE</td>
             <td>/users/:Username/favorites/:MovieTitle</td>
             <td></td>
-            <td></td>
+            <td>Return user information without favorite movie</td>
           </tr>
           <tr>
             <td scope="row" class="text-center">12</td>
