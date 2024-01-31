@@ -61,7 +61,7 @@ userSchema.methods.validatePassword = function(password) {
   return bcrypt.compareSync(password, this.Password);
 };
 
-app.get('/movies', passport.authenticate('jwt', { session: false }), async (req, res) => {
+app.get('/movies', (req, res) => {
   Movie.find()
     .then((movie) => {
       res.status(200).json(movie);
