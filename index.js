@@ -25,20 +25,17 @@ mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-
 app.use(express.json());
 app.use(express.static('public'));
+const allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:3000'];
 
-// Routes
 app.use(cors({
-  origin: (origin, callback) => {
-    let allowedOrigins = ['http://localhost:8080', 'http://testsite.com'];
-    if (!origin) return callback(null, true);
-    if (allowedOrigins.indexOf(origin) === -1) {
-      let message = 'The CORS policy for this application doesn’t allow access from origin ' + origin;
-      return callback(new Error(message), false);
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
     }
-    return callback(null, true);
   }
 }));
 
