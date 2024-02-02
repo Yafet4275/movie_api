@@ -41,7 +41,6 @@ app.use(cors({
     return callback(null, true);
   }
 }));
-// app.use(cors());
 
 app.use('/', authRouter);
 
