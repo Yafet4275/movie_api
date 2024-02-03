@@ -25,19 +25,20 @@ mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
+
 app.use(express.json());
 app.use(express.static('public'));
 const allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:3000'];
 
+// Routes
 app.use(cors({
-  origin: function (origin, callback) {
+  oorigin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
       callback(new Error('Not allowed by CORS'));
     }
-  }
-}));
+}}));
 
 app.use('/', authRouter);
 
@@ -57,7 +58,7 @@ userSchema.methods.validatePassword = function(password) {
   return bcrypt.compareSync(password, this.Password);
 };
 
-app.get('/movies', passport.authenticate('jwt', { session: false }), async function (req, res) => {
+app.get('/movies', (req, res) => {
   Movie.find()
     .then((movie) => {
       res.status(200).json(movie);
@@ -68,7 +69,7 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), async funct
     });
 });
 
-app.get('/users', passport.authenticate('jwt', { session: false }), async function (req, res) {
+app.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
   User.find()
     .then(function(user) {
       res.status(200).json(user);
