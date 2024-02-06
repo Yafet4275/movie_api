@@ -17,7 +17,6 @@ const mongoose = require('mongoose');
 const { User, Movie } = require('./models');
 
 mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
-
 mongoose.connection.on('error', err => {
   console.error('MongoDB connection error:', err);
 });
@@ -25,14 +24,13 @@ mongoose.connection.once('open', () => {
   console.log('Connected to MongoDB');
 });
 
-
 app.use(express.json());
 app.use(express.static('public'));
 const allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:3000'];
 
 // Routes
 app.use(cors({
-  oorigin: function (origin, callback) {
+  origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
       callback(null, true);
     } else {
@@ -308,7 +306,7 @@ app.delete('/users/:Username', passport.authenticate('jwt', { session: false }),
 
 const port = process.env.PORT || 8080;
 app.listen(port, '0.0.0.0',() => {
-  console.log('Listening on Port' + port);
+  console.log('Listening on Port ' + port);
 });
 
 module.exports = app;
