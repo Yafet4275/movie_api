@@ -16,7 +16,7 @@ require('./passport');
 const mongoose = require('mongoose');
 const { User, Movie } = require('./models');
 
-mongoose.connect('mongodb+srv://yafet:Cucalavalar0pa94711@t13nd3@cluster0.kpcre4j.mongodb.net/movie?retryWrites=true&w=majority', { 
+mongoose.connect('mongodb+srv://yafet:Cucalavalar0pa94711@t13nd3@cluster0.kpcre4j.mongodb.net/test?retryWrites=true&w=majority', { 
   useNewUrlParser: true, 
   useUnifiedTopology: true 
 });
