@@ -16,12 +16,7 @@ require('./passport');
 const mongoose = require('mongoose');
 const { User, Movie } = require('./models');
 
-mongoose.connect('mongodb+srv://yafet:Cucalavalar0pa94711%40t13nd3@cluster0.kpcre4j.mongodb.net/test?retryWrites=true&w=majority', { 
-  useNewUrlParser: true, 
-  useUnifiedTopology: true 
-});
-
-// mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
+mongoose.connect( process.env.CONNECTION_URI, { useNewUrlParser: true, useUnifiedTopology: true });
 mongoose.connection.on('error', err => {
   console.error('MongoDB connection error:', err);
 });
