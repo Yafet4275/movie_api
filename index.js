@@ -28,7 +28,6 @@ app.use(express.json());
 app.use(express.static('public'));
 const allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:3000'];
 
-// Routes
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.indexOf(origin) !== -1) {
