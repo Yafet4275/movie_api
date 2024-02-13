@@ -84,6 +84,13 @@
           </tr>
           </tr>
           <tr>
+            <td scope="row" class="text-center">8</td>
+            <td>GET</td>
+            <td>/documentation</td>
+            <td></td>
+            <td>documentation.html</td>
+          </tr>
+          <tr>
             <td scope="row" class="text-center">9</td>
             <td>POST</td>
             <td>/users/:Username/favorites/:MovieTitle'</td>
@@ -92,6 +99,34 @@
           </tr>
           <tr>
             <td scope="row" class="text-center">10</td>
+            <td>POST</td>
+            <td>/register'</td>
+            <td>{
+              "Name": "name",
+              "Email": "email",
+              "Password": "password",
+              "Birthday": "DOB",
+              "Country": "country"
+            }
+            </td>
+            <td>User registration</td>
+          </tr>
+          <tr>
+            <td scope="row" class="text-center">11</td>
+            <td>POST</td>
+            <td>/login'</td>
+            <td>{
+              "Name": "name",
+              "Email": "email",
+              "Password": "password",
+              "Birthday": "DOB",
+              "Country": "country"
+            }
+            </td>
+            <td>User registration</td>
+          </tr>
+          <tr>
+            <td scope="row" class="text-center">12</td>
             <td>PUT</td>
             <td>/users/name</td>
             <td>{
@@ -107,25 +142,18 @@
         }</td>
           </tr>
           <tr>
-            <td scope="row" class="text-center">11</td>
+            <td scope="row" class="text-center">13</td>
             <td>DELETE</td>
             <td>/users/:Username/favorites/:MovieTitle</td>
             <td></td>
             <td>Return user information without favorite movie</td>
           </tr>
           <tr>
-            <td scope="row" class="text-center">12</td>
+            <td scope="row" class="text-center">14</td>
             <td>DELETE</td>
             <td>/users/name</td>
             <td></td>
             <td>user id has been deleted</td>
-          </tr>
-          <tr>
-            <td scope="row" class="text-center">13</td>
-            <td>GET</td>
-            <td>/documentation</td>
-            <td></td>
-            <td>documentation.html</td>
           </tr>
         </tbody>
       </table>
@@ -135,6 +163,7 @@
         <li class="list-group-item">CSS</li>
         <li class="list-group-item">JavaScript ES6</li>
         <li class="list-group-item">NodeJS</li>
+        <li class="list-group-item">React</li>
       </ul>
       <nav class="mt-5">
           <h3>Essential Features</h3>
