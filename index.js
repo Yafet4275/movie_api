@@ -66,6 +66,27 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), async (req,
     });
 });
 
+app.get('/users/:Username/favorites', passport.authenticate('jwt',{ session: false }), async (req, res) => {
+  const { Username } = req.params;
+  try {
+    const user = await User.findOne({ Name: Username });
+    if ( !user ) {
+      return res.status(404).send('User not found');
+    }
+    // Extract the array of favorite movie IDs from the user object
+    const favoriteMovieIds = user.FavoriteMovies;
+
+    // Find all the movies whose IDs match the IDs in the array of favorite movie IDs
+    const favoriteMovies = await Movie.find({ _id: { $in: favoriteMovieIds }});
+
+    // Send the list of favorite movies as the response
+    res.status(200).json(favoriteMovies);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error: ' + error);
+  }
+});
+
 app.get('/users', passport.authenticate('jwt', { session: false }), async (req, res) => {
   User.find()
     .then(function(user) {
