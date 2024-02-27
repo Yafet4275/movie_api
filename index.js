@@ -268,44 +268,29 @@ app.put("/users/:name", passport.authenticate('jwt', { session: false }), async 
 
 app.delete('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { Username, MovieId } = req.params;
+  try {
   // Find the user by their username
-  User.findOne({ Name: Username })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send('User not found');
-      }
-      // Find the movie by its title
-      user.findOne({ FavoriteMovies: MovieId })
-        .then((movie) => {
-          if (!movie) {
-            return res.status(404).send('user: ', user);
-          }
-          // Check if the movie is in the user's favorites
-          const movieIndex = user.FavoriteMovies.indexOf(movie._id);
-          if (movieIndex === -1) {
-            return res.status(400).send('Movie is not in favorites');
-          }
-          // Remove the movie's ID from the user's favorites
-          user.FavoriteMovies.splice(movieIndex, 1);
-          // Save the updated user data
-          user.save()
-            .then((updatedUser) => {
-              res.status(200).json(updatedUser);
-            })
-            .catch((err) => {
-              console.error(err);
-              res.status(500).send('Error: ' + err);
-            });
-        })
-        .catch((err) => {
-          console.error(err);
-          res.status(500).send('Error: ' + err);
-        });
-    })
-    .catch((err) => {
-      console.error(err);
+  const user = await User.findOne({ Name: Username })
+    if (!user) {
+      return res.status(404).send('User not found');
+    }
+    // if (!movie) {
+    //   return res.status(404).send('Movie not found');
+    // }
+    // Check if the movie is in the user's favorites
+    const movieIndex = user.FavoriteMovies.indexOf(MovieId);
+    if (movieIndex === -1) {
+      return res.status(400).send('Movie is not in favorites');
+    }
+    // Remove the movie's ID from the user's favorites
+    user.FavoriteMovies.splice(movieIndex, 1);
+    // Save the updated user data
+    const updatedUser = await user.save();
+    res.status(200).json(updatedUser);
+  } catch(error) {
+      console.error(error);
       res.status(500).send('Error: ' + err);
-    });
+    };  
 });
 
 //Allow existing user to deregister
