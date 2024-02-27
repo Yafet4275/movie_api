@@ -66,10 +66,10 @@ app.get('/movies', passport.authenticate('jwt', { session: false }), async (req,
     });
 });
 
-app.get('/users/:Username/favorites', passport.authenticate('jwt',{ session: false }), async (req, res) => {
-  const { Username } = req.params;
+app.get('/users/:Username/favorite', passport.authenticate('jwt',{ session: false }), async (req, res) => {
+  // const { Username } = req.params.Username;
   try {
-    const user = await User.findOne({ Name: Username });
+    const user = await User.findOne({ Name: req.params.Username });
     if ( !user ) {
       return res.status(404).send('User not found');
     }
