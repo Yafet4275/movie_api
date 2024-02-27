@@ -266,8 +266,8 @@ app.put("/users/:name", passport.authenticate('jwt', { session: false }), async 
     })
   });
 
-app.delete('/users/:Username/favorites/:MovieTitle', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  const { Username, MovieTitle } = req.params;
+app.delete('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { Username, MovieId } = req.params;
   // Find the user by their username
   User.findOne({ Name: Username })
     .then((user) => {
@@ -275,7 +275,7 @@ app.delete('/users/:Username/favorites/:MovieTitle', passport.authenticate('jwt'
         return res.status(404).send('User not found');
       }
       // Find the movie by its title
-      Movie.findOne({ Title: MovieTitle })
+      Movie.findOne({ FavoriteMovies: MovieId })
         .then((movie) => {
           if (!movie) {
             return res.status(404).send('Movie not found');
