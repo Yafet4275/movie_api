@@ -275,10 +275,10 @@ app.delete('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', {
         return res.status(404).send('User not found');
       }
       // Find the movie by its title
-      User.findOne({ FavoriteMovies: MovieId })
+      user.findOne({ FavoriteMovies: MovieId })
         .then((movie) => {
           if (!movie) {
-            return res.status(404).send('Movie not found');
+            return res.status(404).send('user: ', user);
           }
           // Check if the movie is in the user's favorites
           const movieIndex = user.FavoriteMovies.indexOf(movie._id);
