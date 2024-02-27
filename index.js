@@ -80,7 +80,7 @@ app.get('/users/:Username/favorite', passport.authenticate('jwt',{ session: fals
     const favoriteMovies = await Movie.find({ _id: { $in: favoriteMovieIds }});
 
     // Send the list of favorite movies as the response
-    res.status(200).json(favoriteMovieIds);
+    res.status(200).json(favoriteMovies);
   } catch (error) {
     console.error(error);
     res.status(500).send('Error: ' + error);
