@@ -200,8 +200,8 @@ app.post('/login', (req, res, next) => {
   })(req, res);
 });
   
-app.post('/users/:Username/favorites/:MovieTitle', passport.authenticate('jwt', { session: false }), async (req, res) => {
-  const { Username, MovieTitle } = req.params;
+app.post('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
+  const { Username, MovieId } = req.params;
   // Find the user by their username
   User.findOne({ Name: Username })
     .then((user) => {
@@ -209,15 +209,16 @@ app.post('/users/:Username/favorites/:MovieTitle', passport.authenticate('jwt', 
         return res.status(404).send('User not found');
       }
       // Find the movie by its title
-      Movie.findOne({ Title: MovieTitle })
+      Users.findOne({ FavoriteMovies: MovieId })
         .then((movie) => {
-          if (!movie) {
-            return res.status(404).send('Movie not found');
+          if (movie) {
+            return res.status(404).send('Movie already exist');
           }
           // Check if the movie is already in the user's favorites
-          if (user.FavoriteMovies.includes(movie._id)) {
-            return res.status(400).send('Movie already in favorites');
-          } else {
+          // if (user.FavoriteMovies.includes(MovieId)) {
+          //   return res.status(400).send('Movie has been added in favorites');
+          // } 
+          else {
             // Add the movie's ID to the user's favorites
             user.FavoriteMovies.push(movie._id);
             // Save the updated user data and send it in the response
