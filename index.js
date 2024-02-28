@@ -219,7 +219,7 @@ app.post('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { s
       // } 
       else {
         // Add the movie's ID to the user's favorites
-        user.FavoriteMovies.push(movie._id); // <-- Potential issue if user._id is null
+        user.FavoriteMovies.push(MovieId); // <-- Potential issue if user._id is null
         // Save the updated user data and send it in the response
         user.save().then((updatedUser) => {
             res.status(200).json(updatedUser);
