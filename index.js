@@ -232,12 +232,12 @@ app.post('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { s
         })
         .catch((err) => {
           console.error(err);
-          res.status(500).send('Error: ' + err);
+          res.status(500).send('Error: first' + err);
         });
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error: " + err);
+      res.status(500).send("Error: second" + err);
     });
 });
 
