@@ -209,7 +209,7 @@ app.post('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { s
     return res.status(404).send('User not found');
   }
   // Find the movie by its title
-  Users.findOne({ FavoriteMovies: MovieId })
+  User.findOne({ FavoriteMovies: MovieId })
     .then((movie) => {
       if (movie) {
         return res.status(404).send('Movie already exist');
@@ -239,9 +239,6 @@ app.post('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { s
       res.status(500).send("Error: second" + err);
     }
   });
-    
-    
-
 
 //Allow users to update their user info
 app.put("/users/:name", passport.authenticate('jwt', { session: false }), async (req, res) => {
