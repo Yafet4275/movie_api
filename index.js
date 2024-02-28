@@ -232,7 +232,7 @@ app.post('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { s
     .catch((err) => {
       console.error(err);
       res.status(500).send('Error: first' + err);
-    });
+    }));
 
 //Allow users to update their user info
 app.put("/users/:name", passport.authenticate('jwt', { session: false }), async (req, res) => {
