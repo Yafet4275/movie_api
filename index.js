@@ -202,44 +202,46 @@ app.post('/login', (req, res, next) => {
   
 app.post('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { Username, MovieId } = req.params;
+  try {
   // Find the user by their username
-  User.findOne({ Name: Username })
-    .then((user) => {
-      if (!user) {
-        return res.status(404).send('User not found');
+  const user = await User.findOne({ Name: Username})
+  if (!user) {
+    return res.status(404).send('User not found');
+  }
+  // Find the movie by its title
+  Users.findOne({ FavoriteMovies: MovieId })
+    .then((movie) => {
+      if (movie) {
+        return res.status(404).send('Movie already exist');
       }
-      // Find the movie by its title
-      Users.findOne({ FavoriteMovies: MovieId })
-        .then((movie) => {
-          if (movie) {
-            return res.status(404).send('Movie already exist');
-          }
-          // Check if the movie is already in the user's favorites
-          // if (user.FavoriteMovies.includes(MovieId)) {
-          //   return res.status(400).send('Movie has been added in favorites');
-          // } 
-          else {
-            // Add the movie's ID to the user's favorites
-            user.FavoriteMovies.push(movie._id);
-            // Save the updated user data and send it in the response
-            user.save().then((updatedUser) => {
-              res.status(200).json(updatedUser);
-            }).catch((err) => {
-              console.error(err);
-              res.status(500).send('Error: ' + err);
-            });
-          }
-        })
-        .catch((err) => {
+      // Check if the movie is already in the user's favorites
+      // if (user.FavoriteMovies.includes(MovieId)) {
+      //   return res.status(400).send('Movie has been added in favorites');
+      // } 
+      else {
+        // Add the movie's ID to the user's favorites
+        user.FavoriteMovies.push(movie._id);
+        // Save the updated user data and send it in the response
+        user.save().then((updatedUser) => {
+          res.status(200).json(updatedUser);
+        }).catch((err) => {
           console.error(err);
-          res.status(500).send('Error: first' + err);
+          res.status(500).send('Error: ' + err);
         });
+      }
     })
     .catch((err) => {
       console.error(err);
-      res.status(500).send("Error: second" + err);
+      res.status(500).send('Error: first' + err);
     });
-});
+  } catch(err) {
+      console.error(err);
+      res.status(500).send("Error: second" + err);
+    }
+  });
+    
+    
+
 
 //Allow users to update their user info
 app.put("/users/:name", passport.authenticate('jwt', { session: false }), async (req, res) => {
