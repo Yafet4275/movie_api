@@ -235,11 +235,14 @@ app.post('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { s
     })
   });
 
-//Allow users to update their user info
 app.put("/users/:name", passport.authenticate('jwt', { session: false }), async (req, res) => {
   if(req.user.Name !== req.params.name) {
     return res.status(400).send('Permission denied');
   }
+  
+  // Hash the password
+  const hashedPassword = await bcrypt.hash(req.body.Password, 10); // 10 is the salt rounds
+  
   await User.findOneAndUpdate(
     {Name: req.params.name},
     {
@@ -247,19 +250,46 @@ app.put("/users/:name", passport.authenticate('jwt', { session: false }), async 
         Name: req.body.Name,
         Email: req.body.Email,
         Birthday: req.body.Birthday,
-        Password: req.body.Password,
+        Password: hashedPassword, // Store hashed password
         Country: req.body.Country
       }
     },
     {new: true}) // This line makes sure that the updated document is returned
-      .then((updatedUser) => {
+    .then((updatedUser) => {
       res.json(updatedUser);
     })
     .catch((err) => {
       console.error(err);
       res.status(500).send('Error: ' + err);
-    })
-  });
+    });
+});
+
+// //Allow users to update their user info
+// app.put("/users/:name", passport.authenticate('jwt', { session: false }), async (req, res) => {
+//   if(req.user.Name !== req.params.name) {
+//     return res.status(400).send('Permission denied');
+//   }
+//   let hashedPassword = User.hashPassword(req.body.Password);
+//   await User.findOneAndUpdate(
+//     {Name: req.params.name},
+//     {
+//       $set: {
+//         Name: req.body.Name,
+//         Email: req.body.Email,
+//         Birthday: req.body.Birthday,
+//         Password: hashedPassword,
+//         Country: req.body.Country
+//       }
+//     },
+//     {new: true}) // This line makes sure that the updated document is returned
+//       .then((updatedUser) => {
+//       res.json(updatedUser);
+//     })
+//     .catch((err) => {
+//       console.error(err);
+//       res.status(500).send('Error: ' + err);
+//     })
+//   });
 
 app.delete('/users/:Username/favorites/:MovieId', passport.authenticate('jwt', { session: false }), async (req, res) => {
   const { Username, MovieId } = req.params;
