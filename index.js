@@ -26,7 +26,7 @@ mongoose.connection.once('open', () => {
 
 app.use(express.json());
 app.use(express.static('public'));
-const allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:3000', 'https://yafetlopez.netlify.app', 'https://3-9--myflixappyafet.netlify.app/'];
+const allowedOrigins = ['http://localhost:8080', 'http://testsite.com', 'http://localhost:3000', 'https://yafetlopez.netlify.app', 'https://yafetlopez.netlify.app/#!'];
 
 app.use(cors({
   origin: function (origin, callback) {
